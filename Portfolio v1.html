@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semiconductor Portfolio — Silicon Substrate</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════ */
+:root {
+  --bg-deep:        oklch(10% 0.012 260);
+  --bg-surface:     oklch(14% 0.015 260);
+  --bg-elevated:    oklch(18% 0.018 255);
+
+  --text-primary:   oklch(92% 0.008 240);
+  --text-secondary: oklch(60% 0.012 240);
+  --text-mono:      oklch(70% 0.030 180);
+
+  --accent-cyan:    oklch(75% 0.22 200);
+  --accent-violet:  oklch(75% 0.22 290);
+  --accent-gold:    oklch(78% 0.18 55);
+  --accent-teal:    oklch(75% 0.22 170);
+  --accent-rose:    oklch(72% 0.20 340);
+
+  --line-subtle:    oklch(25% 0.015 260);
+  --line-mid:       oklch(35% 0.018 260);
+
+  --glass-bg:       oklch(14% 0.015 260 / 0.7);
+  --glass-border:   oklch(40% 0.03 240 / 0.3);
+
+  --wafer-size: min(72vw, 72vh, 680px);
+  --die-size: 28px;
+  --die-gap: 2px;
+}
+
+/* ═══════════════════════════════════════════
+   RESET + BASE
+═══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { height: 100%; scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: 'Space Grotesk', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* Subtle grain overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.4;
+}
+
+/* ═══════════════════════════════════════════
+   SCANLINES
+═══════════════════════════════════════════ */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    oklch(0% 0 0 / 0.03) 2px,
+    oklch(0% 0 0 / 0.03) 4px
+  );
+}
+
+/* ═══════════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════════ */
+.page-wrapper {
+  position: relative; z-index: 1;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+
+/* ═══════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 40px;
+  border-bottom: 0.5px solid var(--line-subtle);
+  backdrop-filter: blur(20px);
+  background: oklch(10% 0.012 260 / 0.8);
+}
+
+.nav-logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-mono);
+  letter-spacing: 0.08em;
+}
+
+.nav-logo span {
+  color: var(--accent-cyan);
+}
+
+.nav-status {
+  display: flex; align-items: center; gap: 24px;
+}
+
+.nav-stat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+
+.nav-stat strong {
+  color: var(--text-mono);
+}
+
+.status-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 8px var(--accent-cyan);
+  animation: pulse 2s ease-in-out infinite;
+  display: inline-block; margin-right: 6px;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ═══════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════ */
+.hero {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 100px 40px 60px;
+  position: relative;
+  gap: 0;
+}
+
+.hero-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 400;
+  color: var(--text-secondary);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+/* ═══════════════════════════════════════════
+   WAFER STAGE
+═══════════════════════════════════════════ */
+.wafer-stage {
+  position: relative;
+  width: var(--wafer-size);
+  height: var(--wafer-size);
+  flex-shrink: 0;
+}
+
+/* Outer glow ring */
+.wafer-ring {
+  position: absolute; inset: -4px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--accent-cyan),
+    var(--accent-violet),
+    var(--accent-gold),
+    var(--accent-teal),
+    var(--accent-rose),
+    var(--accent-cyan)
+  );
+  filter: blur(6px);
+  opacity: 0.35;
+  animation: ring-rotate 12s linear infinite;
+}
+
+@keyframes ring-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Canvas-based wafer */
+#wafer-canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  cursor: crosshair;
+}
+
+/* Holographic overlay canvas */
+#holo-canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.0;
+  transition: opacity 0.3s;
+}
+
+.wafer-stage:hover #holo-canvas {
+  opacity: 1;
+}
+
+/* Notch visual */
+.wafer-notch {
+  position: absolute;
+  bottom: -2px; left: 50%; transform: translateX(-50%);
+  width: 20px; height: 12px;
+  background: var(--bg-deep);
+  border-radius: 0 0 10px 10px;
+  border: 0.5px solid var(--line-mid);
+  border-top: none;
+  z-index: 10;
+}
+
+/* ═══════════════════════════════════════════
+   DIE TOOLTIP
+═══════════════════════════════════════════ */
+#die-tooltip {
+  position: fixed;
+  background: var(--glass-bg);
+  border: 0.5px solid var(--glass-border);
+  backdrop-filter: blur(16px);
+  padding: 10px 14px;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 200;
+  min-width: 160px;
+}
+
+#die-tooltip.visible { opacity: 1; }
+
+.tooltip-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; font-weight: 500;
+  color: var(--accent-cyan);
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+.tooltip-title {
+  font-size: 13px; font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.tooltip-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.tooltip-state {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--accent-teal);
+  margin-top: 4px;
+}
+
+/* ═══════════════════════════════════════════
+   PROJECT DETAIL OVERLAY
+═══════════════════════════════════════════ */
+#project-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: oklch(8% 0.01 260 / 0);
+  backdrop-filter: blur(0px);
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  transition: background 0.5s, backdrop-filter 0.5s;
+}
+
+#project-overlay.open {
+  background: oklch(8% 0.01 260 / 0.92);
+  backdrop-filter: blur(24px);
+  pointer-events: all;
+}
+
+.project-panel {
+  background: var(--bg-surface);
+  border: 0.5px solid var(--glass-border);
+  border-radius: 8px;
+  width: min(680px, 90vw);
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 0;
+  transform: scale(0.92) translateY(30px);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.4s;
+}
+
+#project-overlay.open .project-panel {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.panel-header {
+  padding: 28px 32px 20px;
+  border-bottom: 0.5px solid var(--line-subtle);
+  position: relative;
+}
+
+.panel-die-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--accent-cyan);
+  letter-spacing: 0.15em; margin-bottom: 8px;
+}
+
+.panel-title {
+  font-size: 26px; font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.panel-subtitle {
+  font-size: 14px; color: var(--text-secondary);
+  margin-top: 6px; font-weight: 400;
+}
+
+.panel-close {
+  position: absolute; top: 24px; right: 28px;
+  background: none; border: 0.5px solid var(--line-mid);
+  color: var(--text-secondary);
+  width: 32px; height: 32px; border-radius: 4px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.panel-close:hover {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.panel-body {
+  padding: 24px 32px 32px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+
+.panel-tags {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+
+.tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 500;
+  padding: 4px 10px; border-radius: 2px;
+  border: 0.5px solid var(--glass-border);
+  color: var(--text-mono);
+  background: var(--bg-elevated);
+  letter-spacing: 0.06em;
+}
+
+.panel-description {
+  font-size: 14px; line-height: 1.7;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.panel-specs {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+
+.spec-item {
+  background: var(--bg-elevated);
+  border: 0.5px solid var(--line-subtle);
+  border-radius: 4px; padding: 12px 14px;
+}
+
+.spec-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--text-secondary);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.spec-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; font-weight: 500;
+  color: var(--text-mono);
+}
+
+.panel-actions {
+  display: flex; gap: 12px;
+}
+
+.btn-primary {
+  background: var(--accent-cyan);
+  color: oklch(10% 0.012 260);
+  border: none; padding: 10px 22px; border-radius: 4px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+.btn-secondary {
+  background: none;
+  border: 0.5px solid var(--glass-border);
+  color: var(--text-secondary);
+  padding: 10px 22px; border-radius: 4px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px; font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent-violet);
+  color: var(--accent-violet);
+}
+
+/* ═══════════════════════════════════════════
+   HERO TEXT
+═══════════════════════════════════════════ */
+.hero-footer {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.hero-name {
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 700; letter-spacing: -0.02em;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.hero-name-mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(11px, 1.5vw, 14px);
+  font-weight: 400;
+  color: var(--accent-cyan);
+  letter-spacing: 0.1em;
+  margin-top: 10px;
+  display: block;
+}
+
+.hero-tagline {
+  font-size: clamp(13px, 1.5vw, 15px);
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-top: 14px;
+  max-width: 500px;
+  margin-left: auto; margin-right: auto;
+  line-height: 1.6;
+}
+
+.hero-cta {
+  display: flex; align-items: center; gap: 8px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.cta-hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--text-secondary);
+  letter-spacing: 0.12em;
+  animation: flicker 3s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0%, 90%, 100% { opacity: 1; }
+  95% { opacity: 0.3; }
+}
+
+/* ═══════════════════════════════════════════
+   WAFER STATS BAR
+═══════════════════════════════════════════ */
+.wafer-stats {
+  display: flex; gap: 40px; align-items: center;
+  margin-top: 24px;
+  padding: 12px 24px;
+  border: 0.5px solid var(--line-subtle);
+  border-radius: 4px;
+  background: oklch(14% 0.015 260 / 0.5);
+}
+
+.wstat {
+  display: flex; flex-direction: column; gap: 2px;
+}
+
+.wstat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px; color: var(--text-secondary);
+  letter-spacing: 0.14em; text-transform: uppercase;
+}
+
+.wstat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px; font-weight: 500;
+  color: var(--text-mono);
+}
+
+/* ═══════════════════════════════════════════
+   COORDINATE LINES (decorative)
+═══════════════════════════════════════════ */
+.crosshair-v, .crosshair-h {
+  position: absolute;
+  background: var(--line-subtle);
+  pointer-events: none;
+}
+.crosshair-v { width: 0.5px; top: 0; bottom: 0; left: 50%; opacity: 0.4; }
+.crosshair-h { height: 0.5px; left: 0; right: 0; top: 50%; opacity: 0.4; }
+
+/* ═══════════════════════════════════════════
+   SCROLLS SECTIONS
+═══════════════════════════════════════════ */
+.about-strip {
+  padding: 60px 40px;
+  border-top: 0.5px solid var(--line-subtle);
+  display: flex; gap: 80px; align-items: flex-start;
+  max-width: 1200px; margin: 0 auto; width: 100%;
+}
+
+.about-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 500;
+  color: var(--accent-cyan); letter-spacing: 0.15em;
+  text-transform: uppercase; white-space: nowrap;
+  padding-top: 4px; min-width: 120px;
+}
+
+.about-content { flex: 1; }
+
+.about-content p {
+  font-size: 15px; line-height: 1.75;
+  color: var(--text-secondary); font-weight: 400;
+  max-width: 560px;
+}
+
+.about-content p + p { margin-top: 14px; }
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+footer {
+  border-top: 0.5px solid var(--line-subtle);
+  padding: 24px 40px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.footer-mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--text-secondary);
+  letter-spacing: 0.08em;
+}
+
+.footer-links {
+  display: flex; gap: 24px;
+}
+
+.footer-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--text-secondary);
+  text-decoration: none; letter-spacing: 0.08em;
+  transition: color 0.2s;
+}
+
+.footer-link:hover { color: var(--accent-cyan); }
+
+/* ═══════════════════════════════════════════
+   TWEAKS PANEL
+═══════════════════════════════════════════ */
+#tweaks-panel {
+  position: fixed; bottom: 24px; right: 24px; z-index: 500;
+  background: var(--glass-bg);
+  border: 0.5px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  border-radius: 8px;
+  padding: 20px;
+  width: 240px;
+  display: none;
+  flex-direction: column; gap: 16px;
+  box-shadow: 0 8px 40px oklch(0% 0 0 / 0.4);
+}
+
+#tweaks-panel.visible { display: flex; }
+
+.tweaks-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 500;
+  color: var(--accent-cyan); letter-spacing: 0.15em;
+  text-transform: uppercase; margin-bottom: 4px;
+}
+
+.tweak-row {
+  display: flex; flex-direction: column; gap: 6px;
+}
+
+.tweak-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--text-secondary);
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+
+.tweak-select {
+  background: var(--bg-elevated);
+  border: 0.5px solid var(--line-mid);
+  color: var(--text-primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; padding: 6px 8px; border-radius: 4px;
+  cursor: pointer; outline: none;
+}
+
+.tweak-slider {
+  -webkit-appearance: none;
+  width: 100%; height: 2px;
+  background: var(--line-mid); border-radius: 2px; outline: none;
+}
+
+.tweak-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--accent-cyan); cursor: pointer;
+}
+
+.tweak-segmented {
+  display: flex; gap: 4px;
+}
+
+.tweak-seg-btn {
+  flex: 1; padding: 5px; border-radius: 3px;
+  border: 0.5px solid var(--line-mid);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+}
+
+.tweak-seg-btn.active {
+  background: var(--accent-cyan);
+  color: oklch(10% 0.01 260);
+  border-color: var(--accent-cyan);
+}
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  opacity: 0;
+  animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+
+.fade-up-1 { animation-delay: 0.1s; }
+.fade-up-2 { animation-delay: 0.3s; }
+.fade-up-3 { animation-delay: 0.5s; }
+.fade-up-4 { animation-delay: 0.7s; }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <span>&gt;</span> SILICON_SUBSTRATE <span>v2.4.1</span>
+  </div>
+  <div class="nav-status">
+    <span class="nav-stat"><span class="status-dot"></span><strong>CLEANROOM</strong> — CLASS 10</span>
+    <span class="nav-stat">NODE: <strong>7nm FinFET</strong></span>
+    <span class="nav-stat">YIELD: <strong>83.4%</strong></span>
+  </div>
+</nav>
+
+<!-- MAIN PAGE -->
+<div class="page-wrapper">
+  <section class="hero">
+
+    <p class="hero-label fade-up fade-up-1">300mm silicon wafer · hover dies to inspect · click to explore</p>
+
+    <!-- WAFER STAGE -->
+    <div class="wafer-stage fade-up fade-up-2">
+      <div class="wafer-ring"></div>
+      <div class="crosshair-v"></div>
+      <div class="crosshair-h"></div>
+      <canvas id="wafer-canvas"></canvas>
+      <canvas id="holo-canvas"></canvas>
+      <div class="wafer-notch"></div>
+    </div>
+
+    <!-- HERO IDENTITY -->
+    <div class="hero-footer fade-up fade-up-3">
+      <h1 class="hero-name">Alex Reyes</h1>
+      <span class="hero-name-mono">M.S. SEMICONDUCTOR ENGINEERING · SILICON VALLEY UNIVERSITY</span>
+      <p class="hero-tagline">
+        Bridging sub-nanometer physics and high-level silicon design — 
+        from CMOS device modeling to RTL synthesis and physical verification.
+      </p>
+
+      <div class="wafer-stats fade-up fade-up-4">
+        <div class="wstat">
+          <span class="wstat-label">Projects</span>
+          <span class="wstat-value" id="project-count">—</span>
+        </div>
+        <div class="wstat">
+          <span class="wstat-label">Dies Active</span>
+          <span class="wstat-value" id="die-count">—</span>
+        </div>
+        <div class="wstat">
+          <span class="wstat-label">Yield</span>
+          <span class="wstat-value">83.4%</span>
+        </div>
+        <div class="wstat">
+          <span class="wstat-label">Process Node</span>
+          <span class="wstat-value">7nm</span>
+        </div>
+      </div>
+
+      <div class="hero-cta">
+        <span class="cta-hint">▶ SELECT A DIE TO INSPECT PROJECT</span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ABOUT STRIP -->
+  <div class="about-strip">
+    <div class="about-label">// about</div>
+    <div class="about-content">
+      <p>
+        A Master's researcher at the intersection of semiconductor physics and digital design automation. 
+        My work spans from quantum carrier transport models in 2D materials to automated floorplanning algorithms for modern SoCs.
+      </p>
+      <p>
+        Every die on this wafer is a project. Some are research papers, some are tape-out simulations, some are open-source tools. 
+        Yield isn't 100% — and that's the point. Engineering is about learning from the defects.
+      </p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-mono">© 2026 · ALEX REYES · MSE · SVU</span>
+    <div class="footer-links">
+      <a href="#" class="footer-link">github</a>
+      <a href="#" class="footer-link">linkedin</a>
+      <a href="#" class="footer-link">publications</a>
+      <a href="#" class="footer-link">contact</a>
+    </div>
+  </footer>
+</div>
+
+<!-- DIE TOOLTIP -->
+<div id="die-tooltip">
+  <div class="tooltip-id" id="tt-id"></div>
+  <div class="tooltip-title" id="tt-title"></div>
+  <div class="tooltip-meta" id="tt-meta"></div>
+  <div class="tooltip-state" id="tt-state"></div>
+</div>
+
+<!-- PROJECT OVERLAY -->
+<div id="project-overlay">
+  <div class="project-panel">
+    <div class="panel-header">
+      <div class="panel-die-id" id="panel-die-id"></div>
+      <h2 class="panel-title" id="panel-title"></h2>
+      <p class="panel-subtitle" id="panel-subtitle"></p>
+      <button class="panel-close" id="panel-close">✕</button>
+    </div>
+    <div class="panel-body">
+      <div class="panel-tags" id="panel-tags"></div>
+      <p class="panel-description" id="panel-desc"></p>
+      <div class="panel-specs" id="panel-specs"></div>
+      <div class="panel-actions" id="panel-actions"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TWEAKS PANEL -->
+<div id="tweaks-panel">
+  <div class="tweaks-title">⚙ Tweaks</div>
+
+  <div class="tweak-row">
+    <span class="tweak-label">Holographic Intensity</span>
+    <input type="range" class="tweak-slider" id="tw-holo" min="0" max="100" value="80">
+  </div>
+
+  <div class="tweak-row">
+    <span class="tweak-label">Die Size</span>
+    <div class="tweak-segmented">
+      <button class="tweak-seg-btn" onclick="setDieSize(22)">XS</button>
+      <button class="tweak-seg-btn active" onclick="setDieSize(28)">MD</button>
+      <button class="tweak-seg-btn" onclick="setDieSize(36)">LG</button>
+    </div>
+  </div>
+
+  <div class="tweak-row">
+    <span class="tweak-label">Color Accent</span>
+    <select class="tweak-select" id="tw-accent">
+      <option value="cyan">Cyan / Violet / Gold</option>
+      <option value="green">Green / Teal / Lime</option>
+      <option value="rose">Rose / Violet / Amber</option>
+    </select>
+  </div>
+
+  <div class="tweak-row">
+    <span class="tweak-label">Ring Animation</span>
+    <div class="tweak-segmented">
+      <button class="tweak-seg-btn active" onclick="setRing(true)">ON</button>
+      <button class="tweak-seg-btn" onclick="setRing(false)">OFF</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   PROJECT DATA
+═══════════════════════════════════════════ */
+const PROJECTS = [
+  {
+    id: "D-0x4F2A",
+    title: "2D MoS₂ MOSFET Simulation",
+    subtitle: "Quantum transport in monolayer transition metal dichalcogenides",
+    tags: ["DFT", "NEGF", "Python", "Quantum ESPRESSO"],
+    description: "Ab initio simulation of carrier transport in monolayer MoS₂ field-effect transistors using density functional theory (DFT) and non-equilibrium Green's function (NEGF) formalism. Achieved sub-10nm channel lengths with gate-induced sub-threshold slope of 63 mV/dec.",
+    specs: { "Process": "Monolayer", "Channel L": "8nm", "SS Slope": "63 mV/dec", "Tool": "NEGF + DFT" },
+    state: "0b1101_1001",
+    color: "cyan",
+    links: ["View Paper", "GitHub Repo"]
+  },
+  {
+    id: "D-0x1C8B",
+    title: "RISC-V SoC Floorplanner",
+    subtitle: "Automated placement and routing optimization for custom silicon",
+    tags: ["RTL", "OpenROAD", "TCL", "Python"],
+    description: "An automated floorplanning tool built on OpenROAD that uses simulated annealing with thermal-aware cost functions. Reduces HPWL by 22% versus baseline on standard RISC-V core benchmarks.",
+    specs: { "Reduction": "22% HPWL", "Tech": "TSMC 7nm PDK", "Runtime": "< 4 min", "Tool": "OpenROAD" },
+    state: "0b1110_0011",
+    color: "violet",
+    links: ["Open Tool", "Read Report"]
+  },
+  {
+    id: "D-0x3D7C",
+    title: "FinFET Threshold Voltage Extractor",
+    subtitle: "Machine learning–accelerated SPICE parameter extraction",
+    tags: ["ML", "SPICE", "PyTorch", "FinFET"],
+    description: "A neural network trained on SPICE simulation sweeps to predict threshold voltage Vt and DIBL of FinFET devices from geometry and doping parameters, replacing expensive iterative SPICE runs with sub-millisecond inference.",
+    specs: { "Accuracy": "±1.4 mV", "Speedup": "3400×", "Devices": "FinFET 5nm", "Model": "Transformer" },
+    state: "0b1010_1111",
+    color: "gold",
+    links: ["View Model", "Dataset"]
+  },
+  {
+    id: "D-0x2A91",
+    title: "PDN Impedance Analyzer",
+    subtitle: "Power delivery network analysis for high-speed digital ICs",
+    tags: ["Signal Integrity", "Python", "ANSYS", "PDN"],
+    description: "A Python tool interfacing with ANSYS SIwave for automated PDN impedance simulation and decap optimization. Ensures compliance with target impedance profiles across 1 MHz–10 GHz bands.",
+    specs: { "Frequency": "10 GHz", "Decap Opt.": "GA-based", "EDA": "SIwave", "Type": "Full-wave" },
+    state: "0b1100_0101",
+    color: "teal",
+    links: ["See Report", "GitHub"]
+  },
+  {
+    id: "D-0x5E13",
+    title: "SRAM Bitcell Layout Generator",
+    subtitle: "Parameterized custom layout for 6T SRAM in GPDK 45nm",
+    tags: ["Layout", "Magic VLSI", "DRC", "LVS"],
+    description: "A parameterized script to generate DRC-clean 6T SRAM bitcell layouts in Magic VLSI for GPDK 45nm. Includes automatic guard-ring insertion and LVS verification via Netgen.",
+    specs: { "Bitcell": "6T", "Node": "45nm GPDK", "DRC": "Clean", "Area": "0.27 μm²" },
+    state: "0b1111_0000",
+    color: "rose",
+    links: ["Download Layout", "Documentation"]
+  },
+  {
+    id: "D-0x6B44",
+    title: "Thermal Resistance Mapping",
+    subtitle: "Finite element thermal simulation for 3D IC stacking",
+    tags: ["FEM", "ANSYS Icepak", "3D IC", "Thermal"],
+    description: "Finite element simulation of thermal resistance networks in 3D-stacked ICs with TSVs. Maps hotspot temperatures and identifies optimal die-attach material configurations for junction temperature minimization.",
+    specs: { "Stack": "4-die 3D IC", "ΔT Reduction": "18%", "TSV Pitch": "10μm", "Solver": "FEM" },
+    state: "0b0111_1010",
+    color: "cyan",
+    links: ["Simulation Files", "Paper"]
+  },
+  {
+    id: "D-0xAB2F",
+    title: "Logic Synthesis Benchmarker",
+    subtitle: "Automated QoR comparison across Yosys synthesis flows",
+    tags: ["Yosys", "OpenSTA", "Bash", "EDA"],
+    description: "A benchmarking harness that runs standard logic synthesis flows across multiple Yosys configurations and reports timing, area, and power QoR metrics in a unified dashboard.",
+    specs: { "Benchmarks": "ISCAS'85", "Configs": "14", "Metrics": "PPA", "Tool": "Yosys+STA" },
+    state: "0b1001_0110",
+    color: "violet",
+    links: ["Run Benchmark", "Results"]
+  },
+  {
+    id: "D-0xF3C8",
+    title: "CMOS Inverter Characterizer",
+    subtitle: "DC + transient characterization for digital cell libraries",
+    tags: ["ngspice", "Python", "Cell Library", "CMOS"],
+    description: "Automated Python harness for ngspice-based DC sweep and transient characterization of CMOS standard cells. Outputs Liberty (.lib) files compatible with OpenSTA and OpenROAD for custom cell library development.",
+    specs: { "Output": ".lib (Liberty)", "Corners": "TT, SS, FF, SF, FS", "Cells": "Custom", "Simulator": "ngspice" },
+    state: "0b1011_0011",
+    color: "teal",
+    links: ["View Harness", "Sample .lib"]
+  },
+];
+
+const ACCENT_PALETTES = {
+  cyan:  { h1: 200, h2: 290, h3: 55,  h4: 170, h5: 340, c: 0.22 },
+  green: { h1: 150, h2: 170, h3: 100, h4: 130, h5: 200, c: 0.20 },
+  rose:  { h1: 340, h2: 290, h3: 50,  h4: 360, h5: 310, c: 0.20 },
+};
+
+let currentPalette = ACCENT_PALETTES.cyan;
+let holoIntensity = 0.80;
+let currentDieSize = 28;
+let ringEnabled = true;
+
+/* ═══════════════════════════════════════════
+   CANVAS WAFER ENGINE
+═══════════════════════════════════════════ */
+const waferCanvas = document.getElementById('wafer-canvas');
+const holoCanvas  = document.getElementById('holo-canvas');
+const waferCtx    = waferCanvas.getContext('2d');
+const holoCtx     = holoCanvas.getContext('2d');
+
+let waferSize, dies = [], hoveredDie = null, clickedDie = null;
+let mouseX = -1, mouseY = -1;
+let mouseRelX = 0.5, mouseRelY = 0.5;
+let frameId;
+
+function oklchToRgb(l, c, h) {
+  // Approximate oklch to rgb for canvas use
+  const a = c * Math.cos(h * Math.PI / 180);
+  const b = c * Math.sin(h * Math.PI / 180);
+
+  let ll = (l + 0.3963377774 * a + 0.2158037573 * b);
+  let mm = (l - 0.1055613458 * a - 0.0638541728 * b);
+  let ss = (l - 0.0894841775 * a - 1.2914855480 * b);
+
+  ll = ll * ll * ll; mm = mm * mm * mm; ss = ss * ss * ss;
+
+  let r = +4.0767416621 * ll - 3.3077115913 * mm + 0.2309699292 * ss;
+  let g = -1.2684380046 * ll + 2.6097574011 * mm - 0.3413193965 * ss;
+  let bv = -0.0041960863 * ll - 0.7034186147 * mm + 1.7076147010 * ss;
+
+  const linearToSrgb = x => x >= 0.0031308
+    ? 1.055 * Math.pow(Math.max(x, 0), 1/2.4) - 0.055
+    : 12.92 * x;
+
+  return [
+    Math.round(Math.max(0, Math.min(1, linearToSrgb(r))) * 255),
+    Math.round(Math.max(0, Math.min(1, linearToSrgb(g))) * 255),
+    Math.round(Math.max(0, Math.min(1, linearToSrgb(bv))) * 255),
+  ];
+}
+
+function hueToColor(hue, alpha = 1) {
+  const [r, g, b] = oklchToRgb(0.72, 0.22, hue);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+function setupWafer() {
+  const stage = document.querySelector('.wafer-stage');
+  waferSize = stage.offsetWidth;
+
+  waferCanvas.width  = waferSize;
+  waferCanvas.height = waferSize;
+  holoCanvas.width   = waferSize;
+  holoCanvas.height  = waferSize;
+
+  const dieSize = currentDieSize;
+  const dieGap  = 2;
+  const step    = dieSize + dieGap;
+  const cols    = Math.floor(waferSize / step);
+  const rows    = Math.floor(waferSize / step);
+  const cx      = waferSize / 2;
+  const cy      = waferSize / 2;
+  const radius  = waferSize / 2;
+  const notchH  = 18;
+
+  dies = [];
+
+  // Project assignment — distribute projects across valid dies
+  const projectIndices = [];
+  // We'll assign these after building all valid dies
+
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const x = col * step + (waferSize - cols * step) / 2;
+      const y = row * step + (waferSize - rows * step) / 2;
+
+      // Die center
+      const dcx = x + dieSize / 2;
+      const dcy = y + dieSize / 2;
+
+      // Distance from wafer center
+      const dist = Math.sqrt((dcx - cx) ** 2 + (dcy - cy) ** 2);
+
+      // Must be within circle
+      if (dist + dieSize * 0.2 > radius) continue;
+
+      // Notch exclusion (bottom center)
+      const notchY = waferSize - notchH;
+      const notchW = 30;
+      if (dcy > notchY - 4 && Math.abs(dcx - cx) < notchW / 2) continue;
+
+      const isEdge = dist > radius * 0.85;
+      const isDef  = Math.random() < 0.05; // 5% defect rate
+      const addr   = `0x${((row * cols + col) & 0xFFFF).toString(16).toUpperCase().padStart(4,'0')}`;
+
+      dies.push({ x, y, dieSize, dcx, dcy, isEdge, isDef, addr, row, col, projectIdx: -1 });
+    }
+  }
+
+  // Assign projects to dies (spread around wafer, non-defective, non-edge)
+  const interior = dies.filter(d => !d.isDef && !d.isEdge);
+  // Pick spread positions
+  const assigned = pickSpreadDies(interior, PROJECTS.length);
+  assigned.forEach((die, i) => { die.projectIdx = i; });
+
+  document.getElementById('project-count').textContent = PROJECTS.length;
+  document.getElementById('die-count').textContent = dies.filter(d => !d.isDef).length;
+
+  cancelAnimationFrame(frameId);
+  renderLoop();
+}
+
+function pickSpreadDies(candidates, n) {
+  // Pick N dies distributed evenly across wafer
+  if (candidates.length <= n) return candidates.slice(0, n);
+  const result = [];
+  const used = new Set();
+  // Segment into n angular sectors
+  for (let i = 0; i < n; i++) {
+    const targetAngle = (i / n) * Math.PI * 2;
+    const targetDist  = 0.45 + (i % 3) * 0.12; // vary radially
+    const cx = waferCanvas.width / 2;
+    const cy = waferCanvas.height / 2;
+    const r  = (waferCanvas.width / 2) * targetDist;
+    const tx = cx + r * Math.cos(targetAngle);
+    const ty = cy + r * Math.sin(targetAngle);
+    let best = null, bestD = Infinity;
+    candidates.forEach((d, idx) => {
+      if (used.has(idx)) return;
+      const dd = Math.sqrt((d.dcx - tx)**2 + (d.dcy - ty)**2);
+      if (dd < bestD) { bestD = dd; best = idx; }
+    });
+    if (best !== null) { used.add(best); result.push(candidates[best]); }
+  }
+  return result;
+}
+
+function renderLoop() {
+  waferCtx.clearRect(0, 0, waferSize, waferSize);
+
+  // Clip to circle
+  waferCtx.save();
+  waferCtx.beginPath();
+  waferCtx.arc(waferSize/2, waferSize/2, waferSize/2 - 1, 0, Math.PI*2);
+  waferCtx.clip();
+
+  // Wafer background gradient
+  const bg = waferCtx.createRadialGradient(
+    waferSize/2, waferSize/2, 0,
+    waferSize/2, waferSize/2, waferSize/2
+  );
+  bg.addColorStop(0,   'oklch(18% 0.02 260)');
+  bg.addColorStop(0.6, 'oklch(13% 0.015 260)');
+  bg.addColorStop(1,   'oklch(8% 0.01 260)');
+  waferCtx.fillStyle = bg;
+  waferCtx.fillRect(0, 0, waferSize, waferSize);
+
+  // Draw dies
+  dies.forEach(die => {
+    const isHovered  = hoveredDie === die;
+    const isProject  = die.projectIdx >= 0;
+    const isDefect   = die.isDef;
+
+    let baseColor, borderColor;
+
+    if (isDefect) {
+      baseColor  = 'rgba(80, 20, 20, 0.8)';
+      borderColor = 'rgba(150, 50, 50, 0.5)';
+    } else if (isProject) {
+      const proj = PROJECTS[die.projectIdx];
+      const hue  = currentPalette[`h${(die.projectIdx % 5) + 1}`];
+      const [r,g,b] = oklchToRgb(0.18, 0.06, hue);
+      baseColor   = `rgba(${r},${g},${b},0.9)`;
+      const [br,bg2,bb] = oklchToRgb(0.65, 0.20, hue);
+      borderColor = `rgba(${br},${bg2},${bb},0.7)`;
+    } else if (die.isEdge) {
+      baseColor  = 'rgba(22,26,35,0.8)';
+      borderColor = 'rgba(45,52,68,0.6)';
+    } else {
+      baseColor  = 'rgba(24,28,40,0.85)';
+      borderColor = 'rgba(40,48,65,0.7)';
+    }
+
+    let dx = die.x, dy = die.y, ds = die.dieSize;
+
+    if (isHovered && !isDefect) {
+      const scale = 1.18;
+      const offset = (ds * (scale - 1)) / 2;
+      dx -= offset; dy -= offset; ds *= scale;
+
+      // Hover glow
+      const hue = isProject
+        ? currentPalette[`h${(die.projectIdx % 5) + 1}`]
+        : currentPalette.h1;
+      const [gr, gg, gb] = oklchToRgb(0.72, 0.22, hue);
+      waferCtx.shadowColor = `rgba(${gr},${gg},${gb},0.9)`;
+      waferCtx.shadowBlur  = 16;
+    } else {
+      waferCtx.shadowBlur = 0;
+    }
+
+    waferCtx.fillStyle = baseColor;
+    waferCtx.fillRect(dx, dy, ds, ds);
+
+    waferCtx.strokeStyle = borderColor;
+    waferCtx.lineWidth   = isHovered ? 1 : 0.5;
+    waferCtx.strokeRect(dx, dy, ds, ds);
+
+    waferCtx.shadowBlur = 0;
+
+    // Project die accent — tiny dot
+    if (isProject && !isDefect) {
+      const hue = currentPalette[`h${(die.projectIdx % 5) + 1}`];
+      const [pr, pg, pb] = oklchToRgb(0.78, 0.22, hue);
+      waferCtx.fillStyle = `rgba(${pr},${pg},${pb},0.9)`;
+      waferCtx.beginPath();
+      waferCtx.arc(die.x + die.dieSize * 0.78, die.y + die.dieSize * 0.22, 2, 0, Math.PI * 2);
+      waferCtx.fill();
+    }
+
+    // Defect mark
+    if (isDefect) {
+      waferCtx.fillStyle = 'rgba(220,60,60,0.8)';
+      waferCtx.beginPath();
+      waferCtx.arc(die.x + die.dieSize/2, die.y + die.dieSize/2, 2, 0, Math.PI*2);
+      waferCtx.fill();
+    }
+  });
+
+  // Notch
+  const cx2 = waferSize / 2;
+  waferCtx.fillStyle = 'oklch(10% 0.012 260)';
+  waferCtx.beginPath();
+  waferCtx.arc(cx2, waferSize + 8, 16, 0, Math.PI*2);
+  waferCtx.fill();
+
+  waferCtx.restore();
+
+  // Outer ring stroke
+  waferCtx.strokeStyle = 'oklch(30% 0.025 240)';
+  waferCtx.lineWidth   = 0.5;
+  waferCtx.beginPath();
+  waferCtx.arc(waferSize/2, waferSize/2, waferSize/2 - 1, 0, Math.PI*2);
+  waferCtx.stroke();
+
+  // Holographic overlay
+  renderHolo();
+
+  frameId = requestAnimationFrame(renderLoop);
+}
+
+/* ═══════════════════════════════════════════
+   HOLOGRAPHIC LIGHT ENGINE
+═══════════════════════════════════════════ */
+function renderHolo() {
+  holoCtx.clearRect(0, 0, waferSize, waferSize);
+
+  holoCtx.save();
+  holoCtx.beginPath();
+  holoCtx.arc(waferSize/2, waferSize/2, waferSize/2 - 2, 0, Math.PI*2);
+  holoCtx.clip();
+
+  // Thin film interference simulation
+  // Multiple radial gradients shifted by mouse position
+  const mx = mouseRelX;
+  const my = mouseRelY;
+  const t  = Date.now() / 1000;
+
+  // Layer 1: main iridescent sweep
+  const cx1 = waferSize * (0.2 + mx * 0.6);
+  const cy1 = waferSize * (0.2 + my * 0.6);
+
+  const grad1 = holoCtx.createRadialGradient(cx1, cy1, 0, cx1, cy1, waferSize * 0.7);
+  const hueShift = mx * 180 + my * 90 + t * 15;
+
+  const h1 = (hueShift) % 360;
+  const h2 = (hueShift + 60) % 360;
+  const h3 = (hueShift + 120) % 360;
+  const h4 = (hueShift + 200) % 360;
+
+  grad1.addColorStop(0,   hueToColor(h1, 0.55 * holoIntensity));
+  grad1.addColorStop(0.3, hueToColor(h2, 0.35 * holoIntensity));
+  grad1.addColorStop(0.6, hueToColor(h3, 0.25 * holoIntensity));
+  grad1.addColorStop(1,   hueToColor(h4, 0.05 * holoIntensity));
+
+  holoCtx.fillStyle = grad1;
+  holoCtx.fillRect(0, 0, waferSize, waferSize);
+
+  // Layer 2: specular highlight
+  const sx  = waferSize * (0.1 + mx * 0.8);
+  const sy  = waferSize * (0.1 + my * 0.8);
+  const grad2 = holoCtx.createRadialGradient(sx, sy, 0, sx, sy, waferSize * 0.25);
+  grad2.addColorStop(0,   `rgba(255,255,255,${0.25 * holoIntensity})`);
+  grad2.addColorStop(0.5, `rgba(255,255,255,${0.05 * holoIntensity})`);
+  grad2.addColorStop(1,   'rgba(255,255,255,0)');
+  holoCtx.fillStyle = grad2;
+  holoCtx.fillRect(0, 0, waferSize, waferSize);
+
+  // Layer 3: concentric diffraction rings
+  const ringCount = 8;
+  for (let i = 0; i < ringCount; i++) {
+    const rh = (h1 + i * 45) % 360;
+    const [rr, rg, rb] = oklchToRgb(0.72, 0.20, rh);
+    const ringR  = (waferSize / 2) * (0.15 + i * 0.11);
+    const ring = holoCtx.createRadialGradient(
+      waferSize/2, waferSize/2, ringR - 6,
+      waferSize/2, waferSize/2, ringR + 6
+    );
+    ring.addColorStop(0,   `rgba(${rr},${rg},${rb},0)`);
+    ring.addColorStop(0.5, `rgba(${rr},${rg},${rb},${0.06 * holoIntensity})`);
+    ring.addColorStop(1,   `rgba(${rr},${rg},${rb},0)`);
+    holoCtx.fillStyle = ring;
+    holoCtx.fillRect(0, 0, waferSize, waferSize);
+  }
+
+  holoCtx.restore();
+}
+
+/* ═══════════════════════════════════════════
+   INTERACTION
+═══════════════════════════════════════════ */
+const tooltip = document.getElementById('die-tooltip');
+
+function getDieAt(ex, ey) {
+  const rect = waferCanvas.getBoundingClientRect();
+  const px   = (ex - rect.left) * (waferSize / rect.width);
+  const py   = (ey - rect.top)  * (waferSize / rect.height);
+  for (let i = dies.length - 1; i >= 0; i--) {
+    const d = dies[i];
+    if (px >= d.x && px <= d.x + d.dieSize && py >= d.y && py <= d.y + d.dieSize) return d;
+  }
+  return null;
+}
+
+waferCanvas.addEventListener('mousemove', e => {
+  const rect = waferCanvas.getBoundingClientRect();
+  mouseRelX  = (e.clientX - rect.left) / rect.width;
+  mouseRelY  = (e.clientY - rect.top)  / rect.height;
+  mouseX     = e.clientX;
+  mouseY     = e.clientY;
+
+  const die = getDieAt(e.clientX, e.clientY);
+  hoveredDie = die;
+
+  if (die && !die.isDef) {
+    showTooltip(die, e.clientX, e.clientY);
+  } else {
+    hideTooltip();
+  }
+});
+
+waferCanvas.addEventListener('mouseleave', () => {
+  hoveredDie = null;
+  mouseRelX  = 0.5;
+  mouseRelY  = 0.5;
+  hideTooltip();
+});
+
+waferCanvas.addEventListener('click', e => {
+  const die = getDieAt(e.clientX, e.clientY);
+  if (die && die.projectIdx >= 0) {
+    openProject(die);
+  }
+});
+
+function showTooltip(die, cx, cy) {
+  const isProj = die.projectIdx >= 0;
+  document.getElementById('tt-id').textContent    = `DIE ${die.addr} · ROW ${die.row} · COL ${die.col}`;
+  document.getElementById('tt-title').textContent = isProj ? PROJECTS[die.projectIdx].title : 'Functional Die';
+  document.getElementById('tt-meta').textContent  = isProj
+    ? PROJECTS[die.projectIdx].tags.join(' · ')
+    : `Logic State: ${die.isEdge ? 'EDGE' : 'NOMINAL'}`;
+  document.getElementById('tt-state').textContent = isProj
+    ? `STATE: ${PROJECTS[die.projectIdx].state}`
+    : `ADDR: ${die.addr}`;
+
+  // Position
+  const tw = 180, th = 90;
+  let tx = cx + 16, ty = cy - th / 2;
+  if (tx + tw > window.innerWidth - 16) tx = cx - tw - 16;
+  if (ty < 8) ty = 8;
+  if (ty + th > window.innerHeight - 8) ty = window.innerHeight - th - 8;
+
+  tooltip.style.left    = tx + 'px';
+  tooltip.style.top     = ty + 'px';
+  tooltip.classList.add('visible');
+}
+
+function hideTooltip() {
+  tooltip.classList.remove('visible');
+}
+
+/* ═══════════════════════════════════════════
+   PROJECT PANEL
+═══════════════════════════════════════════ */
+const overlay = document.getElementById('project-overlay');
+
+function openProject(die) {
+  const proj = PROJECTS[die.projectIdx];
+  document.getElementById('panel-die-id').textContent   = `DIE ${die.addr} · ${proj.state}`;
+  document.getElementById('panel-title').textContent    = proj.title;
+  document.getElementById('panel-subtitle').textContent = proj.subtitle;
+  document.getElementById('panel-desc').textContent     = proj.description;
+
+  // Tags
+  const tagsEl = document.getElementById('panel-tags');
+  tagsEl.innerHTML = '';
+  proj.tags.forEach(t => {
+    const tag = document.createElement('span');
+    tag.className   = 'tag'; tag.textContent = t;
+    tagsEl.appendChild(tag);
+  });
+
+  // Specs
+  const specsEl = document.getElementById('panel-specs');
+  specsEl.innerHTML = '';
+  Object.entries(proj.specs).forEach(([k, v]) => {
+    specsEl.innerHTML += `
+      <div class="spec-item">
+        <div class="spec-label">${k}</div>
+        <div class="spec-value">${v}</div>
+      </div>`;
+  });
+
+  // Actions
+  const actEl = document.getElementById('panel-actions');
+  actEl.innerHTML = '';
+  proj.links.forEach((l, i) => {
+    const btn = document.createElement('button');
+    btn.className   = i === 0 ? 'btn-primary' : 'btn-secondary';
+    btn.textContent = l;
+    actEl.appendChild(btn);
+  });
+
+  hideTooltip();
+  overlay.classList.add('open');
+}
+
+document.getElementById('panel-close').addEventListener('click', () => {
+  overlay.classList.remove('open');
+});
+
+overlay.addEventListener('click', e => {
+  if (e.target === overlay) overlay.classList.remove('open');
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') overlay.classList.remove('open');
+});
+
+/* ═══════════════════════════════════════════
+   TWEAKS
+═══════════════════════════════════════════ */
+document.getElementById('tw-holo').addEventListener('input', e => {
+  holoIntensity = e.target.value / 100;
+});
+
+document.getElementById('tw-accent').addEventListener('change', e => {
+  currentPalette = ACCENT_PALETTES[e.target.value] || ACCENT_PALETTES.cyan;
+});
+
+function setDieSize(sz) {
+  currentDieSize = sz;
+  document.querySelectorAll('.tweak-seg-btn').forEach(btn => {
+    if (btn.textContent === ({22:'XS',28:'MD',36:'LG'}[sz])) btn.classList.add('active');
+  });
+  setupWafer();
+}
+
+function setRing(on) {
+  ringEnabled = on;
+  const ring = document.querySelector('.wafer-ring');
+  ring.style.animationPlayState = on ? 'running' : 'paused';
+  ring.style.opacity = on ? '0.35' : '0.12';
+}
+
+/* ═══════════════════════════════════════════
+   TWEAKS PANEL HOST PROTOCOL
+═══════════════════════════════════════════ */
+const tweaksPanel = document.getElementById('tweaks-panel');
+
+window.addEventListener('message', e => {
+  if (e.data?.type === '__activate_edit_mode')   tweaksPanel.classList.add('visible');
+  if (e.data?.type === '__deactivate_edit_mode') tweaksPanel.classList.remove('visible');
+});
+
+window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+
+/* ═══════════════════════════════════════════
+   GLOBAL MOUSE for holo off-canvas
+═══════════════════════════════════════════ */
+document.addEventListener('mousemove', e => {
+  const rect = waferCanvas.getBoundingClientRect();
+  if (e.clientX < rect.left || e.clientX > rect.right || e.clientY < rect.top || e.clientY > rect.bottom) {
+    mouseRelX = 0.5; mouseRelY = 0.5;
+  }
+});
+
+/* ═══════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  setupWafer();
+});
+
+window.addEventListener('resize', () => {
+  setupWafer();
+});
+</script>
+</body>
+</html>
