@@ -198,6 +198,30 @@ nav {
   flex-shrink: 0;
 }
 
+.wafer-link-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+}
+
+.wafer-die-link {
+  position: absolute;
+  display: block;
+  border: 0.5px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  text-decoration: none;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+}
+
+.wafer-die-link:hover,
+.wafer-die-link:focus-visible {
+  border-color: oklch(82% 0.18 180 / 0.85);
+  background: oklch(72% 0.15 180 / 0.08);
+  box-shadow: 0 0 0 1px oklch(72% 0.15 180 / 0.18);
+}
+
 /* Outer glow ring */
 .wafer-ring {
   position: absolute; inset: -4px;
@@ -427,7 +451,7 @@ nav {
 }
 
 .panel-actions {
-  display: flex; gap: 12px;
+  display: flex; gap: 12px; flex-wrap: wrap;
 }
 
 .btn-primary {
@@ -438,6 +462,10 @@ nav {
   font-size: 13px; font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s, transform 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
@@ -451,6 +479,10 @@ nav {
   font-size: 13px; font-weight: 500;
   cursor: pointer;
   transition: border-color 0.2s, color 0.2s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-secondary:hover {
@@ -496,6 +528,7 @@ nav {
 .hero-cta {
   display: flex; align-items: center; gap: 8px;
   justify-content: center;
+  flex-wrap: wrap;
   margin-top: 24px;
 }
 
@@ -504,6 +537,26 @@ nav {
   font-size: 10px; color: var(--text-secondary);
   letter-spacing: 0.12em;
   animation: flicker 3s ease-in-out infinite;
+}
+
+.hero-link {
+  border: 0.5px solid var(--glass-border);
+  border-radius: 4px;
+  padding: 10px 18px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: border-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.hero-link:hover,
+.hero-link:focus-visible {
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  transform: translateY(-1px);
 }
 
 @keyframes flicker {
@@ -1029,6 +1082,7 @@ footer .footer-perf {
       <div class="crosshair-h"></div>
       <canvas id="wafer-canvas"></canvas>
       <canvas id="holo-canvas"></canvas>
+      <div class="wafer-link-layer" id="wafer-link-layer"></div>
       <div class="wafer-notch"></div>
     </div>
 
@@ -1086,6 +1140,7 @@ footer .footer-perf {
 
       <div class="hero-cta">
         <span class="cta-hint">▶ SELECT A DIE TO INSPECT</span>
+        <a href="./uploads/resume.pdf" class="hero-link" target="_blank" rel="noopener noreferrer">View Full Resume</a>
       </div>
     </div>
 
@@ -1116,6 +1171,7 @@ footer .footer-perf {
     <div class="footer-links">
       <a href="https://github.com/mageto" class="footer-link" target="_blank">github</a>
       <a href="https://linkedin.com/in/mageto-nyakoni" class="footer-link" target="_blank">linkedin</a>
+      <a href="./uploads/resume.pdf" class="footer-link" target="_blank" rel="noopener noreferrer">resume</a>
       <a href="mailto:mageto.nya@gmail.com" class="footer-link">contact</a>
     </div>
     <div class="footer-perf">
@@ -1224,6 +1280,44 @@ const CATEGORY_HUE = {
   education:  340,
 };
 
+const RESUME_HREF = './uploads/resume.pdf';
+const PROFILE_LINKS = {
+  github: 'https://github.com/mageto',
+  linkedin: 'https://linkedin.com/in/mageto-nyakoni',
+};
+
+const LINK_TARGETS = {
+  'View Program': 'https://graduate.northeastern.edu/program/master-of-science-in-semiconductor-engineering/',
+  'UT Dallas': 'https://catalog.utdallas.edu/2024/undergraduate/programs/ecs/software-engineering',
+  'Full Resume': RESUME_HREF,
+  'Revature': 'https://revature.com/',
+  'GitHub': PROFILE_LINKS.github,
+  'NTxSI Site': 'https://ntxsi.utdallas.edu/',
+  'Match Group': 'https://mtch.com/',
+  'RSM US': 'https://rsmus.com/',
+  'HAKing': 'https://www.hakinginnovation.org/what-we-do',
+  'Live Site': 'https://mustangoptics.com/',
+  'Demo': PROFILE_LINKS.github,
+  'LinkedIn': PROFILE_LINKS.linkedin,
+  'Chapter Info': 'https://clubs.utdnebula.com/directory/product-dallas',
+  'UT Dallas Eng.': 'https://engineering.utdallas.edu/',
+  'NSBE National': 'https://nsbe.org/',
+  'TEALS Program': 'https://www.microsoft.com/en-us/teals',
+  'Tinder Tech': 'https://medium.com/tinder/tinders-inaugural-tindership-hackathon-brought-big-ideas-to-life-1f1fb5facc34',
+  'Apple Diversity': 'https://www.apple.com/diversity/',
+  'NSBE': 'https://nsbe.org/',
+  'INROADS': 'https://inroads.org/',
+};
+
+function normalizeLinks(links) {
+  return links.map(link => {
+    if (typeof link === 'string') {
+      return { label: link, href: LINK_TARGETS[link] ?? RESUME_HREF };
+    }
+    return { label: link.label, href: link.href ?? LINK_TARGETS[link.label] ?? RESUME_HREF };
+  });
+}
+
 const PROJECTS = [
   // ── EDUCATION ───────────────────────────────────────────
   {
@@ -1235,7 +1329,7 @@ const PROJECTS = [
     description: "Admitted to Northeastern University's M.S. program in Semiconductor Engineering with a concentration in Materials & Manufacturing for Fall 2026. Recipient of a 55% merit-based tuition scholarship, recognizing academic excellence and potential in the semiconductor field.",
     specs: { "Degree": "M.S. Semiconductor Eng.", "Start": "Fall 2026", "Location": "Boston, MA", "Scholarship": "55% Merit Award" },
     state: "0b1110_0001",
-    links: ["View Program", "LinkedIn"]
+    links: normalizeLinks(["View Program", "LinkedIn", "Full Resume"])
   },
   {
     id: "D-0xED02",
@@ -1246,7 +1340,7 @@ const PROJECTS = [
     description: "Bachelor of Science in Software Engineering from The University of Texas at Dallas (May 2025). Coursework includes Algorithms & Data Structures, Operating Systems, Databases, Intro to Machine Learning, and Human Language Technologies (NLP). Recipient of Academic Excellence Scholarship, NSBE Bridge Scholar, and INROADS Fellow.",
     specs: { "Degree": "B.S. Software Eng.", "Graduated": "May 2025", "GPA": "Honors", "Fellowships": "NSBE · INROADS" },
     state: "0b1101_0010",
-    links: ["UT Dallas", "Transcript"]
+    links: normalizeLinks(["UT Dallas", "Full Resume"])
   },
 
   // ── EXPERIENCE ──────────────────────────────────────────
@@ -1259,7 +1353,7 @@ const PROJECTS = [
     description: "Completed intensive training in Java full-stack development at Revature, focusing on Spring framework and modern web technologies. Developed production-ready skills in enterprise Java, RESTful APIs, and frontend integration.",
     specs: { "Stack": "Java / Spring Boot", "Type": "Full Stack", "Duration": "3 months", "Location": "Plano, TX" },
     state: "0b1010_0011",
-    links: ["Revature", "GitHub"]
+    links: normalizeLinks(["Revature", "GitHub"])
   },
   {
     id: "D-0xEX02",
@@ -1270,7 +1364,7 @@ const PROJECTS = [
     description: "Maintained the NTxSI website, shipping UX updates and CSS refactors aligned to stakeholder requirements. Supported semiconductor outreach as a student assistant on K–12 field trips, reinforcing fabrication concepts through hands-on demonstrations for North Texas students.",
     specs: { "Domain": "Semiconductor Ecosystem", "Role": "Student Assistant", "Duration": "9 months", "Focus": "Web + Outreach" },
     state: "0b1100_1101",
-    links: ["NTxSI Site", "LinkedIn"]
+    links: normalizeLinks(["NTxSI Site", "LinkedIn"])
   },
   {
     id: "D-0xEX03",
@@ -1281,7 +1375,7 @@ const PROJECTS = [
     description: "Gathered requirements with Payments Engineering, Finance, and Legal; authored 45 Jira user stories and co-owned a subscription payments migration plan projecting ~30% profit uplift with weekly executive readouts. Co-led a Gen-Z acquisition workstream projecting ~8% MAU increase. Coordinated across six cross-functional partners.",
     specs: { "Profit Proj.": "~30% uplift", "MAU Proj.": "+8%", "Stories": "45 Jira", "Partners": "6 XFN teams" },
     state: "0b1111_0100",
-    links: ["Match Group", "Case Study"]
+    links: normalizeLinks(["Match Group", "Full Resume"])
   },
   {
     id: "D-0xEX04",
@@ -1292,7 +1386,7 @@ const PROJECTS = [
     description: "Utilized Power BI to analyze course completion and demographic data for 1,000+ employees, proposing a strategy targeting a 30% increase in program adoption. Implemented Python & Pandas to clean and transform data across three projects, improving Data Science team throughput by ~20%.",
     specs: { "Tool": "Power BI + Python", "Employees": "1,000+", "Adoption Target": "+30%", "Throughput": "+20%" },
     state: "0b1001_1110",
-    links: ["RSM US", "LinkedIn"]
+    links: normalizeLinks(["RSM US", "LinkedIn"])
   },
   {
     id: "D-0xEX05",
@@ -1303,7 +1397,7 @@ const PROJECTS = [
     description: "Introduced Programming, 3D Design, Circuits, and Arduino to 100+ Dallas ISD students in after-school and summer STEM programs. Assisted with hands-on lab-style activities building early familiarity with electronic circuits and hardware concepts, while refining technical communication skills.",
     specs: { "Students": "100+ Dallas ISD", "Topics": "Arduino · Circuits · 3D", "Format": "After-school + Summer", "Skills": "Hardware + Comms" },
     state: "0b0111_1001",
-    links: ["HAKing", "LinkedIn"]
+    links: normalizeLinks(["HAKing", "LinkedIn"])
   },
 
   // ── PROJECTS ────────────────────────────────────────────
@@ -1316,7 +1410,7 @@ const PROJECTS = [
     description: "Designed and developed a fully responsive website from scratch for a small optics engineering business using Next.js, with reusable components and modern UI patterns. Created design mockups in Figma and ensured usability and visual consistency across devices; deployed and maintained on Vercel.",
     specs: { "Framework": "Next.js", "Deploy": "Vercel", "Design": "Figma", "Type": "Client Project" },
     state: "0b1110_1010",
-    links: ["Live Site", "GitHub"]
+    links: normalizeLinks(["Live Site", "GitHub"])
   },
   {
     id: "D-0xPJ02",
@@ -1327,7 +1421,7 @@ const PROJECTS = [
     description: "Designed an intuitive UI/UX for a cross-platform mobile application (Android and iOS) using Flutter, ensuring seamless navigation and clear location feedback. Collaborated with a team of five to integrate GPS tracking and backend services, optimizing real-time updates for location verification.",
     specs: { "Framework": "Flutter / Dart", "Platforms": "Android + iOS", "Team": "5 engineers", "Backend": "GPS + C++/Java" },
     state: "0b1011_0111",
-    links: ["GitHub", "Demo"]
+    links: normalizeLinks(["GitHub", "Full Resume"])
   },
 
   // ── LEADERSHIP ──────────────────────────────────────────
@@ -1340,7 +1434,7 @@ const PROJECTS = [
     description: "Co-founded the first Product Management student organization at UT Dallas, growing participation to 30+ active members. Organized product case workshops and mock panels, supporting 10+ members in earning PM/SWE offers at companies including Microsoft and Salesforce.",
     specs: { "Members": "30+ active", "Placements": "10+ PM/SWE offers", "Companies": "Microsoft · Salesforce", "Role": "Co-Founder" },
     state: "0b1000_1111",
-    links: ["LinkedIn", "Chapter Info"]
+    links: normalizeLinks(["LinkedIn", "Chapter Info"])
   },
   {
     id: "D-0xLD02",
@@ -1351,7 +1445,7 @@ const PROJECTS = [
     description: "Led council initiatives and supported 20+ engineering organizations through monthly town halls and standardized status reporting to the Dean and faculty. Built a new onboarding roadmap and monthly readout structure, improving council membership engagement and good standing by ~40%.",
     specs: { "Orgs Supported": "20+", "Engagement": "+40%", "Reporting": "Dean + Faculty", "Role": "President + Secretary" },
     state: "0b1101_0000",
-    links: ["UT Dallas Eng.", "LinkedIn"]
+    links: normalizeLinks(["UT Dallas Eng.", "LinkedIn"])
   },
   {
     id: "D-0xLD03",
@@ -1362,7 +1456,7 @@ const PROJECTS = [
     description: "Secured $15k+ in funding by leading a 15-member executive board using agile planning for programs supporting underrepresented engineering students. Increased chapter membership by ~300% through campus outreach and collaborations with engineering and cultural organizations.",
     specs: { "Funding": "$15k+ secured", "Membership": "+300% growth", "Board": "15 executives", "Method": "Agile planning" },
     state: "0b1110_0110",
-    links: ["NSBE National", "LinkedIn"]
+    links: normalizeLinks(["NSBE National", "LinkedIn"])
   },
   {
     id: "D-0xLD04",
@@ -1373,7 +1467,7 @@ const PROJECTS = [
     description: "Supported JJ Pearce High School's AP Computer Science A teachers in instructing Java & Object-Oriented Programming to 30+ students. Part of Microsoft's Technology Education and Literacy in Schools (TEALS) program bridging industry professionals into K–12 CS classrooms.",
     specs: { "Students": "30+", "Subject": "Java + OOP · AP CSA", "Duration": "2 years", "Program": "Microsoft TEALS" },
     state: "0b0110_1100",
-    links: ["TEALS Program", "LinkedIn"]
+    links: normalizeLinks(["TEALS Program", "LinkedIn"])
   },
 
   // ── AWARDS ──────────────────────────────────────────────
@@ -1386,7 +1480,7 @@ const PROJECTS = [
     description: "Awarded 1st Place — Best Overall Product at the Tindership Hackathon in 2024, earning a $5,000 prize. Recognized for delivering the most complete, well-executed product concept among all competing teams.",
     specs: { "Award": "1st Place Overall", "Prize": "$5,000", "Year": "2024", "Type": "Hackathon" },
     state: "0b1111_1111",
-    links: ["LinkedIn", "Project"]
+    links: normalizeLinks(["LinkedIn", "Tinder Tech"])
   },
   {
     id: "D-0xAW02",
@@ -1397,7 +1491,7 @@ const PROJECTS = [
     description: "Received 1st Place at the Apple Black@Hardware Award in 2024, a prestigious recognition for Black engineers demonstrating excellence at the intersection of hardware, innovation, and engineering leadership. Prize: $5,000.",
     specs: { "Award": "1st Place", "Prize": "$5,000", "Org": "Apple", "Year": "2024" },
     state: "0b1111_0101",
-    links: ["LinkedIn", "Apple Diversity"]
+    links: normalizeLinks(["LinkedIn", "Apple Diversity"])
   },
   {
     id: "D-0xAW03",
@@ -1408,7 +1502,7 @@ const PROJECTS = [
     description: "Honored with the NSBE Region 5 Community Enrichment Vanguard Award in 2024, recognizing exceptional contributions to community building, STEM outreach, and support for underrepresented engineering students across the region.",
     specs: { "Org": "NSBE Region 5", "Type": "Community Award", "Year": "2024", "Scope": "Regional" },
     state: "0b1010_0101",
-    links: ["NSBE", "LinkedIn"]
+    links: normalizeLinks(["NSBE", "LinkedIn"])
   },
   {
     id: "D-0xAW04",
@@ -1419,7 +1513,7 @@ const PROJECTS = [
     description: "Recipient of the INROADS 'The Future You' Award in 2024, recognizing outstanding potential, leadership, and professional development among INROADS fellows committed to careers in business and industry.",
     specs: { "Org": "INROADS", "Award": "'The Future You'", "Year": "2024", "Type": "Fellowship Award" },
     state: "0b1001_0001",
-    links: ["INROADS", "LinkedIn"]
+    links: normalizeLinks(["INROADS", "LinkedIn"])
   },
 ];
 
@@ -1444,6 +1538,7 @@ let ringEnabled = true;
 ═══════════════════════════════════════════ */
 const waferCanvas = document.getElementById('wafer-canvas');
 const holoCanvas  = document.getElementById('holo-canvas');
+const waferLinkLayer = document.getElementById('wafer-link-layer');
 const waferCtx    = waferCanvas.getContext('2d');
 const holoCtx     = holoCanvas.getContext('2d');
 
@@ -1451,6 +1546,12 @@ let waferSize, dies = [], hoveredDie = null, clickedDie = null;
 let mouseX = -1, mouseY = -1;
 let mouseRelX = 0.5, mouseRelY = 0.5;
 let frameId;
+
+function updateMouseRelFromClient(clientX, clientY) {
+  const rect = waferCanvas.getBoundingClientRect();
+  mouseRelX = (clientX - rect.left) / rect.width;
+  mouseRelY = (clientY - rect.top)  / rect.height;
+}
 
 function oklchToRgb(l, c, h) {
   // Approximate oklch to rgb for canvas use
@@ -1541,6 +1642,8 @@ function setupWafer() {
   // Pick spread positions
   const assigned = pickSpreadDies(interior, PROJECTS.length);
   assigned.forEach((die, i) => { die.projectIdx = i; });
+
+  syncWaferLinks();
 
   // stats removed from DOM — counts are now hardcoded in the stats bar
 
@@ -1754,6 +1857,69 @@ function renderHolo() {
   holoCtx.restore();
 }
 
+function syncWaferLinks() {
+  waferLinkLayer.innerHTML = '';
+
+  dies
+    .filter(die => die.projectIdx >= 0 && !die.isDef)
+    .forEach(die => {
+      const proj = PROJECTS[die.projectIdx];
+      const primaryLink = proj.links[0];
+      const link = document.createElement('a');
+
+      link.className = 'wafer-die-link';
+      link.href = primaryLink.href;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.setAttribute('aria-label', `${proj.title} — ${primaryLink.label}`);
+      link.title = `${proj.title} — ${primaryLink.label}`;
+      link.style.left = `${die.x}px`;
+      link.style.top = `${die.y}px`;
+      link.style.width = `${die.dieSize}px`;
+      link.style.height = `${die.dieSize}px`;
+
+      link.addEventListener('mouseenter', e => {
+        hoveredDie = die;
+        updateMouseRelFromClient(e.clientX, e.clientY);
+        showTooltip(die, e.clientX, e.clientY);
+        probeDie(die);
+      });
+
+      link.addEventListener('mousemove', e => {
+        hoveredDie = die;
+        updateMouseRelFromClient(e.clientX, e.clientY);
+        showTooltip(die, e.clientX, e.clientY);
+      });
+
+      link.addEventListener('mouseleave', () => {
+        hoveredDie = null;
+        hideTooltip();
+        probeDie(null);
+      });
+
+      link.addEventListener('focus', () => {
+        const rect = link.getBoundingClientRect();
+        hoveredDie = die;
+        showTooltip(die, rect.left + rect.width / 2, rect.top + rect.height / 2);
+        probeDie(die);
+      });
+
+      link.addEventListener('blur', () => {
+        hoveredDie = null;
+        hideTooltip();
+        probeDie(null);
+      });
+
+      link.addEventListener('click', e => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        e.preventDefault();
+        launchProject(die);
+      });
+
+      waferLinkLayer.appendChild(link);
+    });
+}
+
 /* ═══════════════════════════════════════════
    INTERACTION
 ═══════════════════════════════════════════ */
@@ -1792,13 +1958,6 @@ waferCanvas.addEventListener('mouseleave', () => {
   mouseRelX  = 0.5;
   mouseRelY  = 0.5;
   hideTooltip();
-});
-
-waferCanvas.addEventListener('click', e => {
-  const die = getDieAt(e.clientX, e.clientY);
-  if (die && die.projectIdx >= 0) {
-    openProject(die);
-  }
 });
 
 function showTooltip(die, cx, cy) {
@@ -1863,15 +2022,23 @@ function openProject(die) {
   // Actions
   const actEl = document.getElementById('panel-actions');
   actEl.innerHTML = '';
-  proj.links.forEach((l, i) => {
-    const btn = document.createElement('button');
-    btn.className   = i === 0 ? 'btn-primary' : 'btn-secondary';
-    btn.textContent = l;
-    actEl.appendChild(btn);
+  proj.links.forEach((linkObj, i) => {
+    const link = document.createElement('a');
+    link.className = i === 0 ? 'btn-primary' : 'btn-secondary';
+    link.textContent = linkObj.label;
+    link.href = linkObj.href;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    actEl.appendChild(link);
   });
 
   hideTooltip();
   overlay.classList.add('open');
+}
+
+function launchProject(die) {
+  hideTooltip();
+  microscopeZoom(die, () => openProject(die));
 }
 
 document.getElementById('panel-close').addEventListener('click', () => {
@@ -2143,14 +2310,10 @@ waferCanvas.addEventListener('mouseleave', () => {
    HOOK MICROSCOPE ZOOM INTO CLICK
    Override openProject to add zoom first
 ═══════════════════════════════════════════ */
-const _origOpenProject = openProject;
-waferCanvas.removeEventListener('click', waferCanvas._clickHandler);
-
 waferCanvas.addEventListener('click', e => {
   const die = getDieAt(e.clientX, e.clientY);
   if (die && die.projectIdx >= 0) {
-    hideTooltip();
-    microscopeZoom(die, () => _origOpenProject(die));
+    launchProject(die);
   }
 });
 
@@ -2220,7 +2383,7 @@ waferCanvas.addEventListener('touchend', e => {
   hoveredDie = null;
 
   if (die && die.projectIdx >= 0) {
-    microscopeZoom(die, () => openProject(die));
+    launchProject(die);
   } else {
     probeDie(null);
     mouseRelX = 0.5; mouseRelY = 0.5;
