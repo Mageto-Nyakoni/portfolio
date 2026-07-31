@@ -1098,11 +1098,11 @@ footer .footer-perf {
       <div class="wafer-stats fade-up fade-up-4">
         <div class="wstat">
           <span class="wstat-label">Experiences</span>
-          <span class="wstat-value">5</span>
+          <span class="wstat-value">6</span>
         </div>
         <div class="wstat">
           <span class="wstat-label">Projects</span>
-          <span class="wstat-value">2</span>
+          <span class="wstat-value">4</span>
         </div>
         <div class="wstat">
           <span class="wstat-label">Awards</span>
@@ -1291,6 +1291,7 @@ const LINK_TARGETS = {
   'UT Dallas': 'https://catalog.utdallas.edu/2024/undergraduate/programs/ecs/software-engineering',
   'Full Resume': RESUME_HREF,
   'Revature': 'https://revature.com/',
+  'Infosys': 'https://www.infosys.com/',
   'GitHub': PROFILE_LINKS.github,
   'NTxSI Site': 'https://ntxsi.utdallas.edu/',
   'Match Group': 'https://mtch.com/',
@@ -1399,6 +1400,17 @@ const PROJECTS = [
     state: "0b0111_1001",
     links: normalizeLinks(["HAKing", "LinkedIn"])
   },
+  {
+    id: "D-0xEX06",
+    category: "experience",
+    title: "Infosys — SDET",
+    subtitle: "May 2026 – Present",
+    tags: ["SDET", "Selenium", "Automation", "AZ-900", "AI Upskilling"],
+    description: "Working as an SDET at Infosys since May 2026, building testing depth across Selenium-based automation and broader QA workflows. Alongside test automation work, I have been advancing cloud knowledge through certification preparation including AZ-900 and continuing AI upskilling across modern tooling and applied use cases.",
+    specs: { "Role": "SDET", "Start": "May 2026", "Focus": "Selenium + Automation", "Upskilling": "AZ-900 + AI" },
+    state: "0b1101_1011",
+    links: normalizeLinks(["Infosys", "LinkedIn"])
+  },
 
   // ── PROJECTS ────────────────────────────────────────────
   {
@@ -1422,6 +1434,31 @@ const PROJECTS = [
     specs: { "Framework": "Flutter / Dart", "Platforms": "Android + iOS", "Team": "5 engineers", "Backend": "GPS + C++/Java" },
     state: "0b1011_0111",
     links: normalizeLinks(["GitHub", "Full Resume"])
+  },
+  {
+    id: "D-0xPJ03",
+    category: "project",
+    title: "North Texas Semiconductor Institute Website",
+    subtitle: "WordPress · CSS · HTML · JavaScript",
+    tags: ["WordPress", "CSS", "HTML", "JavaScript", "Content Management"],
+    description: "Maintained the North Texas Semiconductor Institute website in WordPress, publishing content updates, adding news feeds, and extending the site's presentation with additional CSS styling. The work focused on keeping site content current while improving usability and polish across web-facing institute pages.",
+    specs: { "Platform": "WordPress", "Content": "News feeds + updates", "Frontend": "CSS / HTML / JavaScript", "Type": "Website Maintenance" },
+    state: "0b1100_0110",
+    links: normalizeLinks(["NTxSI Site", "Full Resume"])
+  },
+  {
+    id: "D-0xPJ04",
+    category: "project",
+    title: "Family Web Website",
+    subtitle: "Astro · 3D Force Graph · React · TypeScript · Render",
+    tags: ["Astro", "3D Force Graph", "React", "TypeScript", "Render"],
+    description: "Built Family Web, an interactive website that uses a 3D rendering library to create dynamic family webbing and visualize relationships across a broad family tree. The experience was designed to make extended family structure easier to explore through motion, depth, and connected graph interactions in the browser.",
+    specs: { "Framework": "Astro + React", "Visualization": "3D Force Graph", "Language": "TypeScript", "Hosting": "Render" },
+    state: "0b1110_1101",
+    links: normalizeLinks([
+      { label: "Live Site", href: "https://family-web-m67n.onrender.com/" },
+      "Full Resume"
+    ])
   },
 
   // ── LEADERSHIP ──────────────────────────────────────────
